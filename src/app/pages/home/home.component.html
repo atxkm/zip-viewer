@@ -1,0 +1,24 @@
+<div class="wrapper">
+
+  <h1 nz-title>Zip分析器</h1>
+
+  <label id="box" class="box" [class.disabled]="analysising" [class.file]="file" [class.dragover]="dragover" (dragover)="dragover = true" (dragleave)="dragover = false">
+    <input type="file" hidden [disabled]="analysising" (change)="fill($event)" accept="application/zip,application/x-zip,application/x-zip-compressed">
+    <ng-container *ngIf="!file">
+      <i nz-icon nzType="file-add" nzTheme="twotone"></i>
+      <span>放入文件</span>
+    </ng-container>
+    <ng-container *ngIf="file">
+      <span>{{ file.name }}</span>
+      <i nz-icon nzType="database" nzTheme="twotone"></i>
+      <span>替换文件</span>
+    </ng-container>
+    <nz-progress nzType="circle" [nzPercent]="percent" [nzStrokeColor]="stokeColor" *ngIf="analysising"></nz-progress>
+  </label>
+
+  <div class="oper">
+    <button nz-button nzType="primary" nzSize="large" (click)="analysis()" [disabled]="!file" *ngIf="!analysising">分析文件</button>
+    <button nz-button nzType="danger" nzSize="large" (click)="cancel()" *ngIf="analysising">终止</button>
+  </div>
+
+</div>

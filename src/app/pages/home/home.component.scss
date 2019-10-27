@@ -1,0 +1,70 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+
+h1.ant-typography {
+  text-align: center;
+  color: #1890ff;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 160px;
+  height: 200px;
+  margin: 0 auto;
+  border: 2px solid #1890ff;
+  text-align: center;
+  cursor: pointer;
+
+  i {
+    margin: 10px 0;
+    font-size: 60px;
+  }
+
+  nz-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .6);
+
+    ::ng-deep {
+      .ant-progress-text {
+        color: #ffffff;
+      }
+    }
+  }
+
+  &.file {
+    background-color: rgba(0, 0, 0, .1);
+  }
+
+  &:hover, &.dragover {
+    border-style: dotted;
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.oper {
+  margin-top: 30px;
+  text-align: center;
+}
+
+
