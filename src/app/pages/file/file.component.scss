@@ -1,0 +1,59 @@
+nz-header.ant-layout-header {
+  padding: 0;
+  //border-bottom: 1px solid #1890ff;
+  background-color: #1890ff;
+  color: #ffffff;
+
+  button.ant-btn-icon-only {
+    width: 63px;
+    height: 63px;
+    border-radius: 0;
+    box-shadow: none;
+
+    &.active {
+      border-color: #1890ff;
+      color: #1890ff;
+    }
+  }
+
+  .ant-btn-icon-only {
+    font-size: 26px;
+  }
+}
+
+nz-sider {
+  padding: 0 10px;
+  //border-right: 1px solid #1890ff;
+  background-color: #1890ff;
+
+  .search {
+    padding: 16px 0;
+  }
+
+  .tree {
+    user-select: none;
+  }
+
+}
+
+::ng-deep {
+  .ant-layout {
+    min-height: 100vh;
+  }
+
+  .ant-tree.ant-tree-show-line li span.ant-tree-switcher {
+    background-color: #1890ff;
+    font-size: 16px;
+    color: #ffffff;
+  }
+
+  .ant-tree li .ant-tree-node-content-wrapper {
+    font-size: 18px;
+    color: #ffffff;
+
+    &:hover, &.ant-tree-node-selected {
+      background-color: #ffffff;
+      color: #1890ff;
+    }
+  }
+}

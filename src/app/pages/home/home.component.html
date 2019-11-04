@@ -3,20 +3,27 @@
   <h1 nz-title>Zip分析器</h1>
 
   <label id="box" class="box" [class.disabled]="analysising" [class.file]="file" [class.dragover]="dragover" (dragover)="dragover = true" (dragleave)="dragover = false">
-    <input type="file" hidden [disabled]="analysising" (change)="fill($event)" accept="application/zip,application/x-zip,application/x-zip-compressed">
+    <input type="file" hidden webkitdirectory [disabled]="analysising" (change)="onChange($event)">
     <ng-container *ngIf="!file">
       <i nz-icon nzType="file-add" nzTheme="twotone"></i>
-      <span>放入文件</span>
+      <span>选择文件夹</span>
     </ng-container>
     <ng-container *ngIf="file">
-      <span>{{ file.name }}</span>
       <i nz-icon nzType="database" nzTheme="twotone"></i>
-      <span>替换文件</span>
+      <span>修改文件夹</span>
     </ng-container>
     <nz-progress nzType="circle" [nzPercent]="percent" [nzStrokeColor]="stokeColor" *ngIf="analysising"></nz-progress>
   </label>
 
+  <p class="path" *ngIf="file">
+    <i nz-icon nzType="folder" nzTheme="twotone"></i>
+    {{ file.path }}
+  </p>
+
   <div class="oper">
+    <nz-input-group nzAddOnAfterIcon="lock">
+      <input type="password" nz-input [(ngModel)]="password" placeholder="解密密码">
+    </nz-input-group>
     <button nz-button nzType="primary" nzSize="large" (click)="analysis()" [disabled]="!file" *ngIf="!analysising">分析文件</button>
     <button nz-button nzType="danger" nzSize="large" (click)="cancel()" *ngIf="analysising">终止</button>
   </div>

@@ -1,0 +1,33 @@
+<nz-layout>
+  <nz-sider>
+    <div class="search">
+      <nz-input-group [nzSuffix]="suffixIcon">
+        <input type="text" nz-input placeholder="文件搜索" [(ngModel)]="searchValue"/>
+      </nz-input-group>
+      <ng-template #suffixIcon>
+        <i nz-icon nzType="search"></i>
+      </ng-template>
+    </div>
+    <div class="tree">
+      <nz-tree [nzData]="nodes" nzBlockNode nzShowLine [nzExpandedIcon]="expandedIconTpl" [nzSearchValue]="searchValue" (nzClick)="onClickNode($event)">
+        <ng-template #expandedIconTpl let-node>
+          <i *ngIf="!node.origin.isLeaf" nz-icon [nzType]="node.isExpanded ? 'folder-open' : 'folder'" class="ant-tree-switcher-line-icon"></i>
+          <i *ngIf="node.origin.isLeaf" nz-icon [nzType]="node.isSelected ? 'folder-open' : 'folder'" class="ant-tree-switcher-line-icon"></i>
+        </ng-template>
+      </nz-tree>
+    </div>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <button nz-button [class.active]="view == 'list'" (click)="view = 'list'">
+        <i nz-icon nzType="profile" [nzTheme]="view == 'list' ? 'fill' : 'outline'"></i>
+      </button>
+      <button nz-button [class.active]="view == 'block'" (click)="view = 'block'">
+        <i nz-icon nzType="appstore" [nzTheme]="view == 'block' ? 'fill' : 'outline'"></i>
+      </button>
+    </nz-header>
+    <nz-content>
+
+    </nz-content>
+  </nz-layout>
+</nz-layout>

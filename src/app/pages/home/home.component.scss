@@ -62,9 +62,19 @@ h1.ant-typography {
   }
 }
 
+.path {
+  margin-top: 10px;
+}
+
 .oper {
-  margin-top: 30px;
+  margin-top: 10px;
   text-align: center;
+
+  nz-input-group {
+    display: block;
+    width: 160px;
+    margin-bottom: 10px;
+  }
 }
 
 
