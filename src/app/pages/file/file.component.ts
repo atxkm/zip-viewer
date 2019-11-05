@@ -27,9 +27,9 @@ export class FileComponent implements OnInit, AfterViewInit {
                     {
                       title: 'Camera', key: '1000000', expanded: true,
                       children: [
-                        { title: '20191029_141408.mp4', key: '10000000', icon: 'video-camera', isLeaf: true, size: '20M', date: '2019-11-01', type: '视频' },
-                        { title: '20191029_141412.mp4', key: '10000001', icon: 'video-camera', isLeaf: true, size: '30M', date: '2019-11-01', type: '视频' },
-                        { title: '20191029_141123.mp4', key: '10000002', icon: 'video-camera', isLeaf: true, size: '40M', date: '2019-11-01', type: '视频' },
+                        { title: '20191029_141408.mp4', key: '10000000', icon: 'video-camera', isLeaf: true, size: '20M', date: '2019-11-01 08:00', modify: '2019-11-01 08:00', type: '视频' },
+                        { title: '20191029_141412.mp4', key: '10000001', icon: 'video-camera', isLeaf: true, size: '30M', date: '2019-11-01 08:01', modify: '2019-11-01 08:00', type: '视频' },
+                        { title: '20191029_141123.mp4', key: '10000002', icon: 'video-camera', isLeaf: true, size: '40M', date: '2019-11-01 08:19', modify: '2019-11-01 08:00', type: '视频' },
                       ],
                     },
                   ],
@@ -61,6 +61,7 @@ export class FileComponent implements OnInit, AfterViewInit {
       this.file = node;
     } else {
       this.files = node.children;
+      this.file = null;
     }
   }
 

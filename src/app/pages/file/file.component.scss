@@ -35,10 +35,17 @@ nz-sider {
 }
 
 nz-content {
+  display: flex;
   background-color: #eff2f5;
+
+  .file-list {
+    flex: 1 1 auto;
+  }
 
   .block {
     display: flex;
+    max-height: 100%;
+    overflow: auto;
 
     .item {
       width: 120px;
@@ -90,14 +97,12 @@ nz-content {
   }
 
   .list {
-    display: flex;
-    flex-direction: column;
     overflow: auto;
+    max-height: 100%;
     color: #ffffff;
 
     table {
       width: 100%;
-      min-height: 100%;
       font-size: 16px;
 
       tr {
@@ -119,6 +124,48 @@ nz-content {
       tr.active {
         background-color: #1890ff;
         color: #ffffff;
+      }
+    }
+
+  }
+
+  .detail {
+    flex: 0 0 300px;
+    padding: 40px;
+    background-color: #fafafa;
+    font-size: 16px;
+    color: #808080;
+
+    .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 150px;
+      font-size: 60px;
+    }
+
+    .name, .title {
+      word-break: break-all;
+      font-size: 22px;
+      font-weight: bold;
+      color: #262626;
+    }
+
+    .name {
+      text-align: center;
+      line-height: 1;
+    }
+
+    .title {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    .info {
+
+      div {
+        display: flex;
+        justify-content: space-between;
       }
     }
   }

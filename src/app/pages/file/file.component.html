@@ -28,31 +28,56 @@
       </button>
     </nz-header>
     <nz-content>
-      <div class="block" *ngIf="view == 'block'">
-        <div class="item" *ngFor="let item of files" [class.active]="item == file" (click)="onSelect(item)">
-          <div class="icon">
-            <i nz-icon nzTheme="fill" [nzType]="item.isLeaf ? item.icon: 'folder'"></i>
+      <div class="file-list">
+        <div class="block" *ngIf="view == 'block'">
+          <div class="item" *ngFor="let item of files" [class.active]="item == file" (click)="onSelect(item)">
+            <div class="icon">
+              <i nz-icon nzTheme="fill" [nzType]="item.isLeaf ? item.icon: 'folder'"></i>
+            </div>
+            <p>
+              <span>{{ item.title }}</span>
+            </p>
           </div>
-          <p>
-            <span>{{ item.title }}</span>
-          </p>
+        </div>
+        <div class="list" *ngIf="view == 'list'">
+          <table border="0">
+            <tr>
+              <th>文件名</th>
+              <th>大小</th>
+              <th>类型</th>
+              <th>创建时间</th>
+            </tr>
+            <tr *ngFor="let item of files" [class.active]="item == file" (click)="onSelect(item)">
+              <td>{{ item.title }}</td>
+              <td>{{ item.origin.size }}</td>
+              <td>{{ item.origin.type }}</td>
+              <td>{{ item.origin.date }}</td>
+            </tr>
+          </table>
         </div>
       </div>
-      <div class="list" *ngIf="view == 'list'">
-        <table border="0">
-          <tr>
-            <th>文件名</th>
-            <th>大小</th>
-            <th>类型</th>
-            <th>添加时间</th>
-          </tr>
-          <tr *ngFor="let item of files" [class.active]="item == file" (click)="onSelect(item)">
-            <td>{{ item.title }}</td>
-            <td>{{ item.origin.size }}</td>
-            <td>{{ item.origin.type }}</td>
-            <td>{{ item.origin.date }}</td>
-          </tr>
-        </table>
+
+      <div class="detail" *ngIf="file">
+        <div class="icon">
+          <i nz-icon nzTheme="fill" [nzType]="file.isLeaf ? file.icon: 'folder'"></i>
+        </div>
+        <div>
+          <span class="name">{{ file.title }}</span>
+        </div>
+        <div>
+          <span>{{ file.origin.type }} - {{ file.origin.size }}</span>
+        </div>
+        <div class="title">信息</div>
+        <div class="info">
+          <div>
+            <span>创建时间</span>
+            <span>{{ file.origin.date }}</span>
+          </div>
+          <div>
+            <span>修改时间</span>
+            <span>{{ file.origin.modify }}</span>
+          </div>
+        </div>
       </div>
     </nz-content>
   </nz-layout>
