@@ -1,33 +1,59 @@
 <nz-layout>
-  <nz-sider>
+  <nz-sider [nzWidth]="320" nzCollapsible>
     <div class="search">
       <nz-input-group [nzSuffix]="suffixIcon">
-        <input type="text" nz-input placeholder="文件搜索" [(ngModel)]="searchValue"/>
+        <input type="text" nz-input placeholder="文件搜索" [(ngModel)]="searchValue">
       </nz-input-group>
       <ng-template #suffixIcon>
         <i nz-icon nzType="search"></i>
       </ng-template>
     </div>
     <div class="tree">
-      <nz-tree [nzData]="nodes" nzBlockNode nzShowLine [nzExpandedIcon]="expandedIconTpl" [nzSearchValue]="searchValue" (nzClick)="onClickNode($event)">
+      <nz-tree #tree [nzData]="nodes" nzBlockNode nzShowLine [nzExpandedIcon]="expandedIconTpl" [nzSearchValue]="searchValue" (nzClick)="onClickNode($event)">
         <ng-template #expandedIconTpl let-node>
           <i *ngIf="!node.origin.isLeaf" nz-icon [nzType]="node.isExpanded ? 'folder-open' : 'folder'" class="ant-tree-switcher-line-icon"></i>
-          <i *ngIf="node.origin.isLeaf" nz-icon [nzType]="node.isSelected ? 'folder-open' : 'folder'" class="ant-tree-switcher-line-icon"></i>
+          <!--          <i *ngIf="node.origin.isLeaf" nz-icon [nzType]="node.isSelected ? 'folder-open' : 'folder'" class="ant-tree-switcher-line-icon"></i>-->
+          <i *ngIf="node.origin.isLeaf" nz-icon [nzType]="'video-camera'" nzTheme="outline" class="ant-tree-switcher-line-icon"></i>
         </ng-template>
       </nz-tree>
     </div>
   </nz-sider>
   <nz-layout>
     <nz-header>
-      <button nz-button [class.active]="view == 'list'" (click)="view = 'list'">
-        <i nz-icon nzType="profile" [nzTheme]="view == 'list' ? 'fill' : 'outline'"></i>
-      </button>
       <button nz-button [class.active]="view == 'block'" (click)="view = 'block'">
         <i nz-icon nzType="appstore" [nzTheme]="view == 'block' ? 'fill' : 'outline'"></i>
       </button>
+      <button nz-button [class.active]="view == 'list'" (click)="view = 'list'">
+        <i nz-icon nzType="profile" [nzTheme]="view == 'list' ? 'fill' : 'outline'"></i>
+      </button>
     </nz-header>
     <nz-content>
-
+      <div class="block" *ngIf="view == 'block'">
+        <div class="item" *ngFor="let item of files" [class.active]="item == file" (click)="onSelect(item)">
+          <div class="icon">
+            <i nz-icon nzTheme="fill" [nzType]="item.isLeaf ? item.icon: 'folder'"></i>
+          </div>
+          <p>
+            <span>{{ item.title }}</span>
+          </p>
+        </div>
+      </div>
+      <div class="list" *ngIf="view == 'list'">
+        <table border="0">
+          <tr>
+            <th>文件名</th>
+            <th>大小</th>
+            <th>类型</th>
+            <th>添加时间</th>
+          </tr>
+          <tr *ngFor="let item of files" [class.active]="item == file" (click)="onSelect(item)">
+            <td>{{ item.title }}</td>
+            <td>{{ item.origin.size }}</td>
+            <td>{{ item.origin.type }}</td>
+            <td>{{ item.origin.date }}</td>
+          </tr>
+        </table>
+      </div>
     </nz-content>
   </nz-layout>
 </nz-layout>

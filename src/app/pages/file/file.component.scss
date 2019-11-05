@@ -22,7 +22,6 @@ nz-header.ant-layout-header {
 }
 
 nz-sider {
-  padding: 0 10px;
   //border-right: 1px solid #1890ff;
   background-color: #1890ff;
 
@@ -33,7 +32,96 @@ nz-sider {
   .tree {
     user-select: none;
   }
+}
 
+nz-content {
+  background-color: #eff2f5;
+
+  .block {
+    display: flex;
+
+    .item {
+      width: 120px;
+      margin: 10px;
+
+      .icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 70px;
+        height: 70px;
+        margin: 0 auto;
+        border-radius: 4px;
+
+        i {
+          font-size: 48px;
+        }
+      }
+
+      p {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2px;
+        line-height: 1;
+        word-break: break-all;
+        font-size: 16px;
+        text-align: center;
+
+        span {
+          padding: 2px;
+          border-radius: 2px;
+          user-select: none;
+        }
+      }
+
+      &.active {
+        .icon {
+          background-color: rgba(0, 0, 0, .2);
+          color: #1890ff;
+        }
+
+        p span {
+          background-color: #1890ff;
+          color: #ffffff;
+        }
+      }
+    }
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    color: #ffffff;
+
+    table {
+      width: 100%;
+      min-height: 100%;
+      font-size: 16px;
+
+      tr {
+        height: 30px;
+
+        th, td {
+          padding-left: 5px;
+        }
+      }
+
+      tr:nth-child(n) {
+        background-color: #2b2b2c;
+      }
+
+      tr:nth-child(2n) {
+        background-color: #353536;
+      }
+
+      tr.active {
+        background-color: #1890ff;
+        color: #ffffff;
+      }
+    }
+  }
 }
 
 ::ng-deep {
@@ -48,12 +136,17 @@ nz-sider {
   }
 
   .ant-tree li .ant-tree-node-content-wrapper {
-    font-size: 18px;
+    font-size: 16px;
     color: #ffffff;
 
     &:hover, &.ant-tree-node-selected {
       background-color: #ffffff;
       color: #1890ff;
     }
+  }
+
+  .ant-layout-sider-children {
+    overflow: auto;
+    padding: 0 10px;
   }
 }
