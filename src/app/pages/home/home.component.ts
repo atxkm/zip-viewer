@@ -1,6 +1,7 @@
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd';
 import { ElectronService } from 'ngx-electron';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +21,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       private modalService: NzModalService,
       private electron: ElectronService,
       private ngZone: NgZone,
+      private router: Router,
   ) {
   }
 
@@ -95,6 +97,17 @@ export class HomeComponent implements OnInit, OnDestroy {
           case 'isNotFolder':
             this.file = null;
             this.modalService.error({ nzTitle: '请选择文件夹' });
+            break;
+          case 'fileProgress':
+            console.log('fileProgress', message);
+            this.percent = message.data.percent;
+            break;
+          case 'fileOver':
+            this.router.navigate(['/file'], {
+              queryParams: {
+                path: message.data.path,
+              },
+            });
             break;
         }
       });
