@@ -6,7 +6,7 @@
     "dev": "ng serve",
     "build": "ng build --c=prod",
     "electron": "electron --inspect=5858 .",
-    "pack": "electron-packager . zipViewer --platform=win32 --arch=x64 --out ../zipViewer --app-version=0.0.1 --electron-version=6.1.3 --overwrite --ignore=node_modules",
+    "pack": "electron-packager . zipViewer --platform=win32 --arch=x64 --out ../zipViewer --app-version=0.0.1 --electron-version=6.1.3 --overwrite",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
