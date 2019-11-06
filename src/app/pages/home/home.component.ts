@@ -18,10 +18,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   analysising = false;
 
   constructor(
-      private modalService: NzModalService,
-      private electron: ElectronService,
-      private ngZone: NgZone,
-      private router: Router,
+    private modalService: NzModalService,
+    private electron: ElectronService,
+    private ngZone: NgZone,
+    private router: Router,
   ) {
   }
 
@@ -99,15 +99,12 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.modalService.error({ nzTitle: '请选择文件夹' });
             break;
           case 'fileProgress':
-            console.log('fileProgress', message);
+            // console.log('fileProgress', message);
             this.percent = message.data.percent;
             break;
           case 'fileOver':
-            this.router.navigate(['/file'], {
-              queryParams: {
-                path: message.data.path,
-              },
-            });
+            this.router.navigate(['/file'], { queryParams: { path: message.data.path } })
+            // setTimeout(() => , 500); // 加一个延时，要不太快，看不到解压进度
             break;
         }
       });

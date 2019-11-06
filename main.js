@@ -3,6 +3,7 @@ const fs = require('fs');
 const Path = require('path');
 const crypto = require('crypto');
 const unzip = require('unzip-stream');
+const moment = require('moment');
 
 let win;
 let fileNum = 0;
@@ -22,7 +23,7 @@ function createWindow() {
 
   // 加载index.html文件
   // win.loadFile('dist/zip-viewer/index.html');
-  win.loadURL('http://localhost:4200');
+  win.loadURL('http://localhost:4200').then();
 
   // 打开开发者工具
   win.webContents.openDevTools();
@@ -58,6 +59,7 @@ ipcMain.on('message', (e, message) => {
       onFolderChange(message.data);
       break;
     case 'analyseFolder':
+      log('start analyseFolder', moment().format('HH:mm:ss.SS'));
       fileNum = 0;
       overNum = 0;
       const data = message.data;
@@ -81,8 +83,11 @@ function analyseFolder(path, password) {
     if (stat.isDirectory() === true) {
       analyseFolder(fPath, password);
     } else {
-      doDecrypt(fPath, password);
-      fileNum++; // 增加文件计数
+      const fileName = Path.basename(fPath);
+      if (fileName.indexOf('%&') !== -1) {
+        fileNum++; // 增加文件计数
+        doDecrypt(fPath, password);
+      }
     }
   });
 }
@@ -96,11 +101,13 @@ function doDecrypt(fPath, password) {
   //   decryptIniFile(fPath, password);
   // }
   // const stat = fs.statSync(fPath);
-  if (fPath.indexOf('.zip') != -1) {
-    unZip(fPath);
+  if (fPath.indexOf('.zip') !== -1) {
+    unZip(fPath, password);
   } else {
-    const file = fs.readFileSync(fPath);
-    writeFile(fPath, file);
+    fs.readFile(fPath, (err, file) => {
+      if (err) throw err;
+      writeFile(fPath, file);
+    });
   }
 }
 
@@ -116,9 +123,9 @@ function encryptBigFile(fPath, password) {
 
 function hashcode(str) {
   let hash = 0,
-    i,
-    chr,
-    len;
+      i,
+      chr,
+      len;
   if (str.length === 0) {
     return hash;
   }
@@ -147,11 +154,15 @@ function decrypt(content, password) {
 
 function writeFile(fPath, data) {
   const fileName = Path.basename(fPath);
-  if (fileName.indexOf('%&') != -1) {// 加密时使用"%&"替代了反斜杠，现在解密时替换回来
-    const fPathD = getDestDir(fileName);
-    fs.writeFileSync(fPathD, data);
-    sendPersent();
-  }
+  const fPathD = getDestDir(fileName);
+  fs.writeFile(fPathD, data, (err) => {
+    if (err) return;
+    // 如果是来源是解压之后的文件，就删除原文件
+    if (fPath.indexOf('decryptData') !== -1) {
+      fs.unlinkSync(fPath);
+    }
+    sendPercent();
+  });
 }
 
 function getFiles(path) {
@@ -182,23 +193,6 @@ function getFiles(path) {
   return files;
 }
 
-function loopDir(path, files) {
-  const paths = fs.readdirSync(data.path);
-  for (const path of paths) {
-    const stat = fs.statSync(path);
-    if (stat.isDirectory()) {
-      loopDir(path, files);
-    } else {
-      files.push(getFileData(path));
-    }
-  }
-}
-
-function getFileData(path) {
-  const file = fs.readFileSync(path);
-
-}
-
 function getDestDir(fileName) {
   let srcAllPath = fileName.replace(/%&/g, Path.sep);
   const dir = Path.join(destRootDir, Path.dirname(srcAllPath));
@@ -206,19 +200,24 @@ function getDestDir(fileName) {
   return Path.join(destRootDir, srcAllPath);
 }
 
-async function unZip(fPath) {
+function unZip(fPath, password) {
   const fileName = Path.basename(fPath);
-  if (fileName.indexOf('%&') != -1) {// 加密时使用"%&"替代了反斜杠，现在解密时替换回来
+  if (fileName.indexOf('%&') !== -1) {// 加密时使用"%&"替代了反斜杠，现在解密时替换回来
     const fPathD = getDestDir(fileName);
-    fs.createReadStream(fPath).pipe(unzip.Extract({ path: Path.dirname(fPathD) }));
-    sendPersent();
+    const dirD = Path.dirname(fPathD);
+    fs.createReadStream(fPath).pipe(unzip.Extract({ path: dirD }));
+    setTimeout(() => {
+      overNum++;
+      analyseFolder(dirD, password);
+    }, 300);
   }
 }
 
-function sendPersent() {
+function sendPercent() {
   overNum++;
-  const persent = Math.floor(overNum / fileNum * 100);
-  sendToWin({ type: 'fileProgress', data: { persent } });
+  log(overNum, fileNum);
+  const percent = Math.floor(overNum / fileNum * 100);
+  sendToWin({ type: 'fileProgress', data: { percent } });
   if (overNum >= fileNum) {
     sendToWin({ type: 'fileOver', data: { path: destRootDir } });
   }
