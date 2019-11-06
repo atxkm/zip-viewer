@@ -6,6 +6,7 @@ import { NgxElectronModule } from 'ngx-electron';
 
 import { HomeComponent } from './home/home.component';
 import { FileComponent } from './file/file.component';
+import { PipesModule } from '../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { FileComponent } from './file/file.component';
     NzLayoutModule,
     NzTreeModule,
     NzInputModule,
+    PipesModule,
   ],
 })
 export class PagesModule {

@@ -163,7 +163,7 @@ function getFiles(path) {
     const temp = {
       title: item,
       key: stats.ino,
-      size: stats.zise,
+      size: stats.size,
       mtime: stats.mtime,
       birthtime: stats.birthtime,
     };

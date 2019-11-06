@@ -13,7 +13,7 @@
         <ng-template #expandedIconTpl let-node>
           <i *ngIf="!node.origin.isLeaf" nz-icon [nzType]="node.isExpanded ? 'folder-open' : 'folder'" class="ant-tree-switcher-line-icon"></i>
           <!--          <i *ngIf="node.origin.isLeaf" nz-icon [nzType]="node.isSelected ? 'folder-open' : 'folder'" class="ant-tree-switcher-line-icon"></i>-->
-          <i *ngIf="node.origin.isLeaf" nz-icon [nzType]="'video-camera'" nzTheme="outline" class="ant-tree-switcher-line-icon"></i>
+          <i *ngIf="node.origin.isLeaf" nz-icon [nzType]="node.origin.title | fileIcon" nzTheme="outline" class="ant-tree-switcher-line-icon"></i>
         </ng-template>
       </nz-tree>
     </div>
@@ -32,7 +32,7 @@
         <div class="block" *ngIf="view == 'block'">
           <div class="item" *ngFor="let item of files" [class.active]="item == file" (click)="onSelect(item)">
             <div class="icon">
-              <i nz-icon nzTheme="fill" [nzType]="item.isLeaf ? item.icon: 'folder'"></i>
+              <i nz-icon nzTheme="fill" [nzType]="item.isLeaf ? (item.title | fileIcon) : 'folder'"></i>
             </div>
             <p>
               <span>{{ item.title }}</span>
@@ -49,9 +49,9 @@
             </tr>
             <tr *ngFor="let item of files" [class.active]="item == file" (click)="onSelect(item)">
               <td>{{ item.title }}</td>
-              <td>{{ item.origin.size }}</td>
-              <td>{{ item.origin.type }}</td>
-              <td>{{ item.origin.date }}</td>
+              <td>{{ item.origin.size | size }}</td>
+              <td>{{ item.origin.title | fileType }}</td>
+              <td>{{ item.origin.birthtime | time }}</td>
             </tr>
           </table>
         </div>
@@ -59,23 +59,24 @@
 
       <div class="detail" *ngIf="file">
         <div class="icon">
-          <i nz-icon nzTheme="fill" [nzType]="file.isLeaf ? file.icon: 'folder'"></i>
+          <!--<img *ngIf="file.title.indexOf('.jpg') != -1" src="">-->
+          <i nz-icon nzTheme="fill" [nzType]="file.isLeaf ? (file.title | fileIcon): 'folder'"></i>
         </div>
         <div>
           <span class="name">{{ file.title }}</span>
         </div>
         <div>
-          <span>{{ file.origin.type }} - {{ file.origin.size }}</span>
+          <span>{{ file.origin.title | fileType }} - {{ file.origin.size | size }}</span>
         </div>
         <div class="title">信息</div>
         <div class="info">
           <div>
             <span>创建时间</span>
-            <span>{{ file.origin.date }}</span>
+            <span>{{ file.origin.birthtime | time }}</span>
           </div>
           <div>
             <span>修改时间</span>
-            <span>{{ file.origin.modify }}</span>
+            <span>{{ file.origin.mtime | time }}</span>
           </div>
         </div>
       </div>
