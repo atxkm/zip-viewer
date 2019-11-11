@@ -22,11 +22,11 @@ function createWindow() {
   });
 
   // 加载index.html文件
-  win.loadFile('dist/zip-viewer/index.html');
-  // win.loadURL('http://localhost:4200').then();
+  // win.loadFile('dist/zip-viewer/index.html');
+  win.loadURL('http://localhost:4200').then();
 
   // 打开开发者工具
-  // win.webContents.openDevTools();
+  win.webContents.openDevTools();
 
   win.on('closed', () => {
     win = null;
@@ -59,7 +59,7 @@ ipcMain.on('message', (e, message) => {
       onFolderChange(message.data);
       break;
     case 'analyseFolder':
-      log('start analyseFolder', moment().format('HH:mm:ss.SS'));
+      // log('start analyseFolder', moment().format('HH:mm:ss.SS'));
       fileNum = 0;
       overNum = 0;
       const data = message.data;
@@ -94,21 +94,21 @@ function analyseFolder(path, password) {
 
 // 第二步
 function doDecrypt(fPath, password) {
-  // const stat = fs.statSync(fPath);
-  // if (stat.size > 1024 * 1024 * 60) {// 大文件解密(异或)
-  //   encryptBigFile(fPath, password); // 对应第四步
-  // } else {
-  //   decryptIniFile(fPath, password);
-  // }
-  // const stat = fs.statSync(fPath);
-  if (fPath.indexOf('.zip') !== -1) {
-    unZip(fPath, password);
+  const stat = fs.statSync(fPath);
+  if (stat.size > 1024 * 1024 * 60) {// 大文件解密(异或)
+    encryptBigFile(fPath, password); // 对应第四步
   } else {
-    fs.readFile(fPath, (err, file) => {
-      if (err) throw err;
-      writeFile(fPath, file);
-    });
+    decryptIniFile(fPath, password);
   }
+  // const stat = fs.statSync(fPath);
+  // if (fPath.indexOf('.zip') !== -1) {
+  //   unZip(fPath, password);
+  // } else {
+  //   fs.readFile(fPath, (err, file) => {
+  //     if (err) throw err;
+  //     writeFile(fPath, file);
+  //   });
+  // }
 }
 
 // 第四步
@@ -139,23 +139,41 @@ function hashcode(str) {
 
 // 第五步
 function decryptIniFile(fPath, password) {
-  const bytes = fs.readFileSync(fPath, 'hex');
+  const bytes = fs.readFileSync(fPath, 'binary');
   const decryptBytes = decrypt(bytes, password);
   writeFile(fPath, decryptBytes);
 }
 
 // 第七步
 function decrypt(content, password) {
+  // while (password.length < 32) {
+  //   password += 0;
+  // }
   const md5Key = crypto.createHash('md5').update(password).digest('hex');
-  const key = new Buffer(md5Key, 'utf8');
-  const cipher = crypto.createDecipheriv('aes-256-ecb', key, new Buffer(''));
-  // return cipher.update(content, 'binary', 'utf8') + cipher.final('utf8');
+  // // log(md5Key);
+  const key = Buffer.from(md5Key, 'utf-8');
+  // const key = Buffer.alloc(32, password, 'utf8');
+  // log(key, keyOld);
+  // const key = Buffer.from('12300000000000000000000000000000', 'utf-8');
+  // const key = Buffer.from('1230000000000000', 'utf-8');
+  // buffer.write(password);
+  // const key = Buffer.from(password, 0, 32);
+  // const cipher = crypto.createDecipheriv('aes-128-ecb', key, '');
+  // const key = crypto.createHash('md5').update('123').digest('hex').substring(8, 24);
+  log(key);
+  const cipher = crypto.createDecipheriv('aes-256-ecb', key, '');
+  const plaingChnks = [];
+  plaingChnks.push(cipher.update(content, 'binary', 'binary'));
+  plaingChnks.push(cipher.final('binary'));
+  // plaingChnks.push(cipher.update(content));
+  // plaingChnks.push(cipher.final());
+  return plaingChnks;
 }
 
 function writeFile(fPath, data) {
   const fileName = Path.basename(fPath);
   const fPathD = getDestDir(fileName);
-  fs.writeFile(fPathD, data, (err) => {
+  fs.writeFile(fPathD, data, 'binary', (err) => {
     if (err) return;
     // 如果是来源是解压之后的文件，就删除原文件
     if (fPath.indexOf('decryptData') !== -1) {
@@ -215,7 +233,7 @@ function unZip(fPath, password) {
 
 function sendPercent() {
   overNum++;
-  log(overNum, fileNum);
+  // log(overNum, fileNum);
   const percent = Math.floor(overNum / fileNum * 100);
   sendToWin({ type: 'fileProgress', data: { percent } });
   if (overNum >= fileNum) {

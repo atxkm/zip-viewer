@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   stokeColor = { '0%': '#108ee9', '50%': '#2db7f5', '100%': '#87d068' };
   dragover = false;
   file: File;
-  password = '123';
+  password = '';
   percent = 0;
   analysising = false;
 
