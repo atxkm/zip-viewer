@@ -143,16 +143,19 @@ function decryptIniFile(fPath, password) {
   const key = Buffer.from(md5Key, 'utf-8');
   const cipher = crypto.createDecipheriv('aes-256-ecb', key, '');
   const input = fs.createReadStream(fPath);
-  console.log('decryptIniFile------------------------------', fPath);
+
   if (fPath.indexOf('.zip') < 0) {
+    const fileName = Path.basename(fPath);
     const fPathD = getDestDir(fileName);
     const output = fs.createWriteStream(fPathD);
-    input.pipe(cipher).pipe(unzip.Parse()).pipe(output);
+    input.pipe(cipher).pipe(output);
+    sendPercent();
+
   } else {
     input.pipe(cipher).pipe(unzip.Parse()).on('entry', entry => {
-      console.log('entry:', entry.path);
       const fPathD = getDestDir(entry.path);
-      fs.createWriteStream(fPathD);
+      return entry.pipe(fs.createWriteStream(fPathD));
+    }).on('end', () => {
       sendPercent();
     });
   }

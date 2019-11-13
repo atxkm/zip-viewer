@@ -23,6 +23,7 @@ nz-header.ant-layout-header {
 
 nz-sider {
   //border-right: 1px solid #1890ff;
+  max-height: 100vh;
   background-color: #1890ff;
 
   .search {
@@ -30,6 +31,9 @@ nz-sider {
   }
 
   .tree {
+    overflow: auto;
+    flex: 1 1 auto;
+    padding-bottom: 50px;
     user-select: none;
   }
 }
@@ -193,7 +197,8 @@ nz-content {
   }
 
   .ant-layout-sider-children {
-    overflow: auto;
+    display: flex;
+    flex-direction: column;
     padding: 0 10px;
   }
 }
