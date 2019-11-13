@@ -3,7 +3,7 @@ const fs = require('fs');
 const Path = require('path');
 const crypto = require('crypto');
 const unzip = require('unzip-stream');
-const moment = require('moment');
+// const moment = require('moment');
 
 let win;
 let fileNum = 0;
@@ -139,36 +139,40 @@ function hashcode(str) {
 
 // 第五步
 function decryptIniFile(fPath, password) {
-  const bytes = fs.readFileSync(fPath, 'binary');
-  const decryptBytes = decrypt(bytes, password);
-  writeFile(fPath, decryptBytes);
+  const md5Key = crypto.createHash('md5').update(password).digest('hex');
+  const key = Buffer.from(md5Key, 'utf-8');
+  const cipher = crypto.createDecipheriv('aes-256-ecb', key, '');
+  const input = fs.createReadStream(fPath);
+  console.log('decryptIniFile------------------------------', fPath);
+  if (fPath.indexOf('.zip') < 0) {
+    const fPathD = getDestDir(fileName);
+    const output = fs.createWriteStream(fPathD);
+    input.pipe(cipher).pipe(unzip.Parse()).pipe(output);
+  } else {
+    input.pipe(cipher).pipe(unzip.Parse()).on('entry', entry => {
+      console.log('entry:', entry.path);
+      const fPathD = getDestDir(entry.path);
+      fs.createWriteStream(fPathD);
+      sendPercent();
+    });
+  }
 }
 
 // 第七步
-function decrypt(content, password) {
-  // while (password.length < 32) {
-  //   password += 0;
-  // }
-  const md5Key = crypto.createHash('md5').update(password).digest('hex');
-  // // log(md5Key);
-  const key = Buffer.from(md5Key, 'utf-8');
-  // const key = Buffer.alloc(32, password, 'utf8');
-  // log(key, keyOld);
-  // const key = Buffer.from('12300000000000000000000000000000', 'utf-8');
-  // const key = Buffer.from('1230000000000000', 'utf-8');
-  // buffer.write(password);
-  // const key = Buffer.from(password, 0, 32);
-  // const cipher = crypto.createDecipheriv('aes-128-ecb', key, '');
-  // const key = crypto.createHash('md5').update('123').digest('hex').substring(8, 24);
-  log(key);
-  const cipher = crypto.createDecipheriv('aes-256-ecb', key, '');
-  const plaingChnks = [];
-  plaingChnks.push(cipher.update(content, 'binary', 'binary'));
-  plaingChnks.push(cipher.final('binary'));
-  // plaingChnks.push(cipher.update(content));
-  // plaingChnks.push(cipher.final());
-  return plaingChnks;
-}
+// function decrypt(content, password) {
+//   const md5Key = crypto.createHash('md5').update(password).digest('hex');
+//   const key = Buffer.from(md5Key, 'utf-8');
+//   const cipher = crypto.createDecipheriv('aes-256-ecb', key, '');
+//   // const chunks = [];
+//   // chunks.push(cipher.update(content, 'binary', 'binary'));
+//   // chunks.push(cipher.final('binary'));
+//   // chunks.push(cipher.update(content));
+//   // chunks.push(cipher.final());
+//   // return chunks;
+//   // return Buffer.concat([cipher.update(content), cipher.final()]);
+//
+// }
+
 
 function writeFile(fPath, data) {
   const fileName = Path.basename(fPath);
@@ -176,9 +180,9 @@ function writeFile(fPath, data) {
   fs.writeFile(fPathD, data, 'binary', (err) => {
     if (err) return;
     // 如果是来源是解压之后的文件，就删除原文件
-    if (fPath.indexOf('decryptData') !== -1) {
-      fs.unlinkSync(fPath);
-    }
+    // if (fPath.indexOf('decryptData') !== -1) {
+    //   fs.unlinkSync(fPath);
+    // }
     sendPercent();
   });
 }
@@ -218,18 +222,18 @@ function getDestDir(fileName) {
   return Path.join(destRootDir, srcAllPath);
 }
 
-function unZip(fPath, password) {
-  const fileName = Path.basename(fPath);
-  if (fileName.indexOf('%&') !== -1) {// 加密时使用"%&"替代了反斜杠，现在解密时替换回来
-    const fPathD = getDestDir(fileName);
-    const dirD = Path.dirname(fPathD);
-    fs.createReadStream(fPath).pipe(unzip.Extract({ path: dirD }));
-    setTimeout(() => {
-      overNum++;
-      analyseFolder(dirD, password);
-    }, 300);
-  }
-}
+// function unZip(fPath, password) {
+//   const fileName = Path.basename(fPath);
+//   if (fileName.indexOf('%&') !== -1) {// 加密时使用"%&"替代了反斜杠，现在解密时替换回来
+//     const fPathD = getDestDir(fileName);
+//     const dirD = Path.dirname(fPathD);
+//     fs.createReadStream(fPath).pipe(unzip.Extract({ path: dirD }));
+//     setTimeout(() => {
+//       overNum++;
+//       analyseFolder(dirD, password);
+//     }, 300);
+//   }
+// }
 
 function sendPercent() {
   overNum++;
