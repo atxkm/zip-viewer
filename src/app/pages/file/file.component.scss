@@ -1,24 +1,35 @@
 nz-header.ant-layout-header {
+  display: flex;
   padding: 0;
-  //border-bottom: 1px solid #1890ff;
   background-color: #1890ff;
   color: #ffffff;
 
-  button.ant-btn-icon-only {
-    width: 63px;
-    height: 63px;
-    border-radius: 0;
-    box-shadow: none;
+  .left {
+    button.ant-btn-icon-only {
+      width: 63px;
+      height: 63px;
+      border-radius: 0;
+      box-shadow: none;
 
-    &.active {
-      border-color: #1890ff;
-      color: #1890ff;
+      &.active {
+        border-color: #1890ff;
+        color: #1890ff;
+      }
+    }
+
+    .ant-btn-icon-only {
+      font-size: 26px;
     }
   }
 
-  .ant-btn-icon-only {
-    font-size: 26px;
+  .right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1 0 auto;
+    padding-right: 20px;
   }
+
 }
 
 nz-sider {

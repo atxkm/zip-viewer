@@ -26,12 +26,17 @@
   </nz-sider>
   <nz-layout>
     <nz-header>
-      <button nz-button [class.active]="view == 'block'" (click)="view = 'block'">
-        <i nz-icon nzType="appstore" [nzTheme]="view == 'block' ? 'fill' : 'outline'"></i>
-      </button>
-      <button nz-button [class.active]="view == 'list'" (click)="view = 'list'">
-        <i nz-icon nzType="profile" [nzTheme]="view == 'list' ? 'fill' : 'outline'"></i>
-      </button>
+      <div class="left">
+        <button nz-button [class.active]="view == 'block'" (click)="view = 'block'">
+          <i nz-icon nzType="appstore" [nzTheme]="view == 'block' ? 'fill' : 'outline'"></i>
+        </button>
+        <button nz-button [class.active]="view == 'list'" (click)="view = 'list'">
+          <i nz-icon nzType="profile" [nzTheme]="view == 'list' ? 'fill' : 'outline'"></i>
+        </button>
+      </div>
+      <div class="right">
+        <button nz-button (click)="exprtExcel()">导出报表</button>
+      </div>
     </nz-header>
     <nz-content>
       <div class="file-list">

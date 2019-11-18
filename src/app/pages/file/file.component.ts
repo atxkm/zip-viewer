@@ -107,4 +107,15 @@ export class FileComponent implements OnInit {
     }
   }
 
+  exprtExcel() {
+    // const data = this.nodes;
+    const data = [
+      ['类型', '数量'],
+      ['视频', 2],
+      ['音频', 3],
+      ['图片', 4],
+    ];
+    this.electron.ipcRenderer.sendSync('message', { type: 'exportExcel', data: { data } });
+  }
+
 }
