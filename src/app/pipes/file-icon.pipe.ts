@@ -12,6 +12,10 @@ export class FileIconPipe implements PipeTransform {
         return 'video-camera';
       case 'jpg':
         return 'file-image';
+      case 'mp3':
+        return 'audio';
+      case 'txt':
+        return 'file-image';
     }
     return 'file-unknown';
   }

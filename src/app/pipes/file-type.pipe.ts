@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'fileType'
+  name: 'fileType',
 })
 export class FileTypePipe implements PipeTransform {
 
@@ -12,6 +12,10 @@ export class FileTypePipe implements PipeTransform {
         return '视频';
       case 'jpg':
         return '图片';
+      case 'txt':
+        return '文本';
+      case 'mp3':
+        return '音频';
     }
     return '未知文件';
   }

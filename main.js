@@ -161,33 +161,28 @@ function decryptIniFile(fPath, password) {
   }
 }
 
-// 第七步
-// function decrypt(content, password) {
-//   const md5Key = crypto.createHash('md5').update(password).digest('hex');
-//   const key = Buffer.from(md5Key, 'utf-8');
-//   const cipher = crypto.createDecipheriv('aes-256-ecb', key, '');
-//   // const chunks = [];
-//   // chunks.push(cipher.update(content, 'binary', 'binary'));
-//   // chunks.push(cipher.final('binary'));
-//   // chunks.push(cipher.update(content));
-//   // chunks.push(cipher.final());
-//   // return chunks;
-//   // return Buffer.concat([cipher.update(content), cipher.final()]);
-//
-// }
-
-
 function writeFile(fPath, data) {
   const fileName = Path.basename(fPath);
   const fPathD = getDestDir(fileName);
-  fs.writeFile(fPathD, data, 'binary', (err) => {
-    if (err) return;
-    // 如果是来源是解压之后的文件，就删除原文件
-    // if (fPath.indexOf('decryptData') !== -1) {
-    //   fs.unlinkSync(fPath);
-    // }
-    sendPercent();
-  });
+  fs.writeFileSync(fPathD, data, { encoding: 'binary' });
+  sendPercent();
+}
+
+function getDestDir(fileName) {
+  let srcAllPath = fileName.replace(/%&/g, Path.sep);
+  const dir = Path.join(destRootDir, Path.dirname(srcAllPath));
+  fs.mkdirSync(dir, { recursive: true }); // 创建所有层级目录
+  return Path.join(destRootDir, srcAllPath);
+}
+
+function sendPercent() {
+  overNum++;
+  // log(overNum, fileNum);
+  const percent = Math.floor(overNum / fileNum * 100);
+  sendToWin({ type: 'fileProgress', data: { percent } });
+  if (overNum >= fileNum) {
+    sendToWin({ type: 'fileOver', data: { path: destRootDir } });
+  }
 }
 
 function getFiles(path) {
@@ -207,8 +202,8 @@ function getFiles(path) {
       temp.children = getFiles(fPath);
       if (temp.children.length === 0) {
         temp.isLeaf = true;
-      } else {
-        temp.expanded = true;
+      // } else {
+      //   temp.expanded = true;
       }
     } else {
       temp.isLeaf = true;
@@ -216,34 +211,4 @@ function getFiles(path) {
     files.push(temp);
   }
   return files;
-}
-
-function getDestDir(fileName) {
-  let srcAllPath = fileName.replace(/%&/g, Path.sep);
-  const dir = Path.join(destRootDir, Path.dirname(srcAllPath));
-  fs.mkdirSync(dir, { recursive: true }); // 创建所有层级目录
-  return Path.join(destRootDir, srcAllPath);
-}
-
-// function unZip(fPath, password) {
-//   const fileName = Path.basename(fPath);
-//   if (fileName.indexOf('%&') !== -1) {// 加密时使用"%&"替代了反斜杠，现在解密时替换回来
-//     const fPathD = getDestDir(fileName);
-//     const dirD = Path.dirname(fPathD);
-//     fs.createReadStream(fPath).pipe(unzip.Extract({ path: dirD }));
-//     setTimeout(() => {
-//       overNum++;
-//       analyseFolder(dirD, password);
-//     }, 300);
-//   }
-// }
-
-function sendPercent() {
-  overNum++;
-  // log(overNum, fileNum);
-  const percent = Math.floor(overNum / fileNum * 100);
-  sendToWin({ type: 'fileProgress', data: { percent } });
-  if (overNum >= fileNum) {
-    sendToWin({ type: 'fileOver', data: { path: destRootDir } });
-  }
 }
