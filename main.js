@@ -1,9 +1,9 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const fs = require('fs');
 const Path = require('path');
 const crypto = require('crypto');
 const unzip = require('unzip-stream');
-// const moment = require('moment');
+const XLSX = require('xlsx');
 
 let win;
 let fileNum = 0;
@@ -70,6 +70,9 @@ ipcMain.on('message', (e, message) => {
       break;
     case 'getFiles':
       e.returnValue = getFiles(message.data.path);
+      break;
+    case 'exportExcel':
+      exportExcel(message.data);
       break;
     default:
   }
@@ -245,5 +248,19 @@ function sendPercent() {
   sendToWin({ type: 'fileProgress', data: { percent } });
   if (overNum >= fileNum) {
     sendToWin({ type: 'fileOver', data: { path: destRootDir } });
+  }
+}
+
+function exportExcel(data) {
+  const book = XLSX.utils.book_new();
+  const sheet = XLSX.utils.aoa_to_sheet(data.data);
+  XLSX.utils.book_append_sheet(book, sheet, '文件分析');
+  const buffer = XLSX.write(book, { type: 'buffer', bookType: 'xlsx' });
+  const path = dialog.showSaveDialogSync({
+    title: '请选择导出位置',
+    defaultPath: Path.dirname(destRootDir) + Path.sep + `文件分析${new Date().getTime()}.xlsx`,
+  });
+  if (path) {
+    fs.writeFileSync(path, buffer);
   }
 }
