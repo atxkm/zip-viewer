@@ -56,7 +56,7 @@ export class FileComponent implements OnInit {
     this.loopFiles(files, nodes[0].children);
     for (const node of nodes[0].children) {
       node.type = node.title;
-      node.title += `(${node.type.length})`;
+      node.title += `(${node.children.length})`;
     }
     this.nodes2 = nodes;
   }
@@ -91,6 +91,7 @@ export class FileComponent implements OnInit {
       }
     } else {
       this.file = node;
+      this.files = node.parentNode.children;
     }
   }
 
@@ -104,12 +105,13 @@ export class FileComponent implements OnInit {
     }
     item.isSelected = true;
     while (item.parentNode) {
-      if (item.isLeaf) {
-        item.isSelected = true;
+      const parent = item.parentNode;
+      if (parent.isLeaf) {
+        parent.isSelected = true;
       } else {
-        item.parentNode.isExpanded = true;
+        parent.isExpanded = true;
       }
-      item = item.parentNode;
+      item = parent;
     }
   }
 
