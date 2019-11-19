@@ -123,7 +123,7 @@ export class FileComponent implements OnInit {
     for (const item of list) {
       data.push([item.type, item.children.length]);
     }
-    this.electron.ipcRenderer.sendSync('message', { type: 'exportExcel', data: { data } });
+    this.electron.ipcRenderer.send('message', { type: 'exportExcel', data: { data } });
   }
 
 }

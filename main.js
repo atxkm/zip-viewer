@@ -22,11 +22,11 @@ function createWindow() {
   });
 
   // 加载index.html文件
-  // win.loadFile('dist/zip-viewer/index.html');
-  win.loadURL('http://localhost:4200').then();
+  win.loadFile('dist/zip-viewer/index.html');
+  // win.loadURL('http://localhost:4200').then();
 
   // 打开开发者工具
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 
   win.on('closed', () => {
     win = null;
