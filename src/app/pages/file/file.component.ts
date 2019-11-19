@@ -43,19 +43,20 @@ export class FileComponent implements OnInit {
 
   analyseFiles(files) {
     files = Object.assign([], files);
-    const nodes = [{
+    const nodes: any = [{
       title: '按类型展示', key: '1',
       children: [
-        { title: '图片', icon: '', key: '10', sfx: ['jpg', 'png', 'gif'], files: [], isLeaf: true },
-        { title: '视频', icon: '', key: '20', sfx: ['mp4', 'avi'], files: [], isLeaf: true },
-        { title: '音频', icon: '', key: '30', sfx: ['mp3'], files: [], isLeaf: true },
-        { title: '文本', icon: '', key: '40', sfx: ['txt'], files: [], isLeaf: true },
+        { title: '图片', icon: '', key: '10', sfx: ['jpg', 'png', 'gif'], children: [], isLeaf: true },
+        { title: '视频', icon: '', key: '20', sfx: ['mp4', 'avi'], children: [], isLeaf: true },
+        { title: '音频', icon: '', key: '30', sfx: ['mp3'], children: [], isLeaf: true },
+        { title: '文本', icon: '', key: '40', sfx: ['txt'], children: [], isLeaf: true },
         // { title: '其他', key: '40', sfx: [], children: [] },
       ],
     }];
     this.loopFiles(files, nodes[0].children);
     for (const node of nodes[0].children) {
-      node.title += `(${node.files.length + 1})`;
+      node.type = node.title;
+      node.title += `(${node.type.length})`;
     }
     this.nodes2 = nodes;
   }
@@ -71,7 +72,7 @@ export class FileComponent implements OnInit {
           return item.sfx.indexOf(sfx) !== -1;
         });
         if (node) {
-          node.files.push(file);
+          node.children.push(file);
           // } else {
           //   nodes[3].files.push(file);
         }
@@ -81,40 +82,45 @@ export class FileComponent implements OnInit {
 
   onClickNode(e) {
     const node = e.node;
-    if (node.origin.files) {
-      this.files = node.origin.files;
-    } else if (node.isLeaf) {
-      this.file = node;
-    } else {
-      node.isExpanded = !node.isExpanded;
-      this.files = node.origin.children;
+    const origin = node.origin;
+    if (origin.children) {
+      this.files = node.children;
       this.file = null;
+      if (!origin.isLeaf) {
+        node.isExpanded = !node.isExpanded;
+      }
+    } else {
+      this.file = node;
     }
   }
 
+  // 中间部分的选择
   onSelect(item) {
-    if (item.files) {
-      this.files = item.files;
-    } else if (item.isLeaf) {
-      this.file = item;
-    } else {
+    const origin = item.origin;
+    if (origin.children) {
       this.files = item.children;
+    } else {
+      this.file = item;
     }
     item.isSelected = true;
     while (item.parentNode) {
-      item.parentNode.isExpanded = true;
+      if (item.isLeaf) {
+        item.isSelected = true;
+      } else {
+        item.parentNode.isExpanded = true;
+      }
       item = item.parentNode;
     }
   }
 
   exprtExcel() {
-    // const data = this.nodes;
     const data = [
       ['类型', '数量'],
-      ['视频', 2],
-      ['音频', 3],
-      ['图片', 4],
     ];
+    const list = this.nodes2[0].children;
+    for (const item of list) {
+      data.push([item.type, item.files.length]);
+    }
     this.electron.ipcRenderer.sendSync('message', { type: 'exportExcel', data: { data } });
   }
 

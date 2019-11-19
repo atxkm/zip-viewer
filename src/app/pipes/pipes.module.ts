@@ -4,6 +4,7 @@ import { FileIconPipe } from './file-icon.pipe';
 import { FileTypePipe } from './file-type.pipe';
 import { SizePipe } from './size.pipe';
 import { TimePipe } from './time.pipe';
+import { LoadImgPipe } from './load-img.pipe';
 
 @NgModule({
   declarations: [
@@ -11,6 +12,7 @@ import { TimePipe } from './time.pipe';
     FileTypePipe,
     SizePipe,
     TimePipe,
+    LoadImgPipe,
   ],
   exports: [
     FileIconPipe,

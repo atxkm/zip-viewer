@@ -59,8 +59,9 @@ nz-content {
 
   .block {
     display: flex;
-    max-height: 100%;
+    flex-wrap: wrap;
     overflow: auto;
+    max-height: 100%;
 
     .item {
       width: 120px;
