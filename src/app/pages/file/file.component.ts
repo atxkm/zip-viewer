@@ -121,7 +121,7 @@ export class FileComponent implements OnInit {
     ];
     const list = this.nodes2[0].children;
     for (const item of list) {
-      data.push([item.type, item.files.length]);
+      data.push([item.type, item.children.length]);
     }
     this.electron.ipcRenderer.sendSync('message', { type: 'exportExcel', data: { data } });
   }
