@@ -19,6 +19,7 @@ import { LoadImgPipe } from './load-img.pipe';
     FileTypePipe,
     SizePipe,
     TimePipe,
+    LoadImgPipe,
   ],
   imports: [
     CommonModule,

@@ -12,8 +12,8 @@ export class LoadImgPipe implements PipeTransform {
   }
 
   transform(value: any, ...args: any[]): any {
-
-    return null;
+    const data = this.electron.ipcRenderer.sendSync('message', { type: 'getImg', data: { path: value } });
+    return 'data:image/jpeg;base64,' + data;
   }
 
 }

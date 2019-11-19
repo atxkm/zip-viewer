@@ -74,6 +74,9 @@ ipcMain.on('message', (e, message) => {
     case 'exportExcel':
       exportExcel(message.data);
       break;
+    case 'getImg':
+      e.returnValue = getImg(message.data);
+      break;
     default:
   }
 });
@@ -103,15 +106,6 @@ function doDecrypt(fPath, password) {
   } else {
     decryptIniFile(fPath, password);
   }
-  // const stat = fs.statSync(fPath);
-  // if (fPath.indexOf('.zip') !== -1) {
-  //   unZip(fPath, password);
-  // } else {
-  //   fs.readFile(fPath, (err, file) => {
-  //     if (err) throw err;
-  //     writeFile(fPath, file);
-  //   });
-  // }
 }
 
 // 第四步
@@ -205,10 +199,9 @@ function getFiles(path) {
       temp.children = getFiles(fPath);
       if (temp.children.length === 0) {
         temp.isLeaf = true;
-        // } else {
-        //   temp.expanded = true;
       }
     } else {
+      temp.path = fPath;
       temp.isLeaf = true;
     }
     files.push(temp);
@@ -228,4 +221,13 @@ function exportExcel(data) {
   if (path) {
     fs.writeFileSync(path, buffer);
   }
+}
+
+function getImg(data) {
+  const fPath = data.path;
+  let file = '';
+  if (fPath) {
+    file = fs.readFileSync(fPath);
+  }
+  return Buffer.from(file).toString('base64');
 }

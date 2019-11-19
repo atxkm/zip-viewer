@@ -70,8 +70,10 @@
 
       <div class="detail" *ngIf="file">
         <div class="icon">
-          <!--<img *ngIf="file.title.indexOf('.jpg') != -1" src="">-->
-          <i nz-icon nzTheme="fill" [nzType]="file.isLeaf ? (file.title | fileIcon): 'folder'"></i>
+          <img *ngIf="(file.title | fileType) == '图片'; else iconTmpl" [src]="file.origin.path | loadImg">
+          <ng-template #iconTmpl>
+            <i nz-icon nzTheme="fill" [nzType]="file.isLeaf ? (file.title | fileIcon): 'folder'"></i>
+          </ng-template>
         </div>
         <div>
           <span class="name">{{ file.title }}</span>
