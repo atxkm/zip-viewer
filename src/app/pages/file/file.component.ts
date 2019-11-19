@@ -1,6 +1,7 @@
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { ActivatedRoute } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-file-info',
@@ -123,7 +124,33 @@ export class FileComponent implements OnInit {
     for (const item of list) {
       data.push([item.type, item.children.length]);
     }
-    this.electron.ipcRenderer.send('message', { type: 'exportExcel', data: { data } });
+    this.electron.ipcRenderer.send('message', { type: 'exportJSON', data: { data } });
+  }
+
+  exportJson() {
+    const json = {
+      detail: '分析报告',
+      fileInfo: [],
+    };
+    const list = this.nodes2[0].children;
+    for (const item of list) {
+      const temp = {
+        fs: [],
+        info: `${item.type + item.children.length}个`,
+      };
+      for (const child of item.children) {
+        temp.fs.push({
+          creatTime: moment(child.birthtime).format('YYYY-MM-DD HH:mm:ss'),
+          modifyTime: moment(child.mtime).format('YYYY-MM-DD HH:mm:ss'),
+          name: child.title,
+          path: child.path.split('decryptData')[1],
+          size: child.size,
+          type: child.type,
+        });
+      }
+      json.fileInfo.push(temp);
+    }
+    this.electron.ipcRenderer.send('message', { type: 'exportJson', data: { json: JSON.stringify(json) } });
   }
 
 }

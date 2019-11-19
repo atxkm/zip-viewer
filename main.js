@@ -22,11 +22,11 @@ function createWindow() {
   });
 
   // 加载index.html文件
-  win.loadFile('dist/zip-viewer/index.html');
-  // win.loadURL('http://localhost:4200').then();
+  // win.loadFile('dist/zip-viewer/index.html');
+  win.loadURL('http://localhost:4200').then();
 
   // 打开开发者工具
-  // win.webContents.openDevTools();
+  win.webContents.openDevTools();
 
   win.on('closed', () => {
     win = null;
@@ -77,6 +77,8 @@ ipcMain.on('message', (e, message) => {
     case 'getImg':
       e.returnValue = getImg(message.data);
       break;
+    case 'exportJson':
+      exportJson(message.data);
     default:
   }
 });
@@ -120,9 +122,9 @@ function encryptBigFile(fPath, password) {
 
 function hashcode(str) {
   let hash = 0,
-      i,
-      chr,
-      len;
+    i,
+    chr,
+    len;
   if (str.length === 0) {
     return hash;
   }
@@ -230,4 +232,15 @@ function getImg(data) {
     file = fs.readFileSync(fPath);
   }
   return Buffer.from(file).toString('base64');
+}
+
+function exportJson(data) {
+  const buffer = Buffer.from(data.json, 'utf8');
+  const path = dialog.showSaveDialogSync({
+    title: '请选择导出位置',
+    defaultPath: Path.dirname(destRootDir) + Path.sep + `文件分析${new Date().getTime()}.json`,
+  });
+  if (path) {
+    fs.writeFileSync(path, buffer);
+  }
 }
