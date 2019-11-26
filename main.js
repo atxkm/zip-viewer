@@ -9,6 +9,7 @@ let win;
 let fileNum = 0;
 let overNum = 0;
 let destRootDir; // 输出主目录
+let passwordError = false;
 
 function createWindow() {
   // 创建浏览器窗口
@@ -66,6 +67,7 @@ ipcMain.on('message', (e, message) => {
       const path = data.path;
       const password = data.password;
       destRootDir = Path.join(Path.dirname(path), 'decryptData'); // 目标目录
+      passwordError = false;
       analyseFolder(path, password);
       break;
     case 'getFiles':
@@ -84,6 +86,10 @@ ipcMain.on('message', (e, message) => {
 });
 
 function analyseFolder(path, password) {
+  if (passwordError) {
+    return;
+  }
+
   const files = fs.readdirSync(path);
   files.forEach(item => {
     const fPath = Path.join(path, item);
@@ -147,16 +153,21 @@ function decryptIniFile(fPath, password) {
     const fileName = Path.basename(fPath);
     const fPathD = getDestDir(fileName);
     const output = fs.createWriteStream(fPathD);
-    input.pipe(cipher).pipe(output);
+    input.pipe(cipher).on('error', () => sendPasswordError()).pipe(output);
     sendPercent();
 
   } else {
     input.pipe(cipher).pipe(unzip.Parse()).on('entry', entry => {
       const fPathD = getDestDir(entry.path);
       return entry.pipe(fs.createWriteStream(fPathD));
-    }).on('end', () => {
-      sendPercent();
-    });
+    }).on('end', () => sendPercent()).on('error', () => sendPasswordError());
+  }
+}
+
+function sendPasswordError() {
+  if (!passwordError) {
+    passwordError = true;
+    sendToWin({ type: 'pwdError' });
   }
 }
 

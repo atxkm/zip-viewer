@@ -73,6 +73,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.modalService.warning({ nzTitle: '密码未填！' });
       return;
     }
+    this.percent = 0;
     this.analysising = true;
     this.sendElectronMessage('analyseFolder', { path: this.file.path, password: this.password });
   }
@@ -99,12 +100,15 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.modalService.error({ nzTitle: '请选择文件夹' });
             break;
           case 'fileProgress':
-            // console.log('fileProgress', message);
             this.percent = message.data.percent;
             break;
           case 'fileOver':
-            this.router.navigate(['/file'], { queryParams: { path: message.data.path } })
-            // setTimeout(() => , 500); // 加一个延时，要不太快，看不到解压进度
+            this.router.navigate(['/file'], { queryParams: { path: message.data.path } });
+            break;
+          case 'pwdError':
+            this.modalService.error({ nzTitle: '密码无效，清重新输入' });
+            this.password = '';
+            this.analysising = false;
             break;
         }
       });
