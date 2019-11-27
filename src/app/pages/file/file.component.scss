@@ -1,7 +1,7 @@
 nz-header.ant-layout-header {
   display: flex;
   padding: 0;
-  background-color: #1890ff;
+  background-color: #0d141c;
   color: #ffffff;
 
   .left {
@@ -11,9 +11,9 @@ nz-header.ant-layout-header {
       border-radius: 0;
       box-shadow: none;
 
-      &.active {
-        border-color: #1890ff;
-        color: #1890ff;
+      &.active, &:hover {
+        border-color: #9bb8c8;
+        color: #9bb8c8;
       }
     }
 
@@ -28,6 +28,14 @@ nz-header.ant-layout-header {
     align-items: center;
     flex: 1 0 auto;
     padding-right: 20px;
+
+    button.ant-btn {
+
+      &.active, &:hover {
+        border-color: #9bb8c8;
+        color: #9bb8c8;
+      }
+    }
   }
 
 }
@@ -35,7 +43,8 @@ nz-header.ant-layout-header {
 nz-sider {
   //border-right: 1px solid #1890ff;
   max-height: 100vh;
-  background-color: #1890ff;
+  background-color: #0d141c;
+  color: #ffffff;
 
   .search {
     padding: 16px 0;
@@ -100,12 +109,12 @@ nz-content {
 
       &.active {
         .icon {
-          background-color: rgba(0, 0, 0, .2);
-          color: #1890ff;
+          background-color: rgba(255, 255, 255, .2);
+          color: #9bb8c8;
         }
 
         p span {
-          background-color: #1890ff;
+          background-color: #9bb8c8;
           color: #ffffff;
         }
       }
@@ -138,7 +147,7 @@ nz-content {
       }
 
       tr.active {
-        background-color: #1890ff;
+        background-color: #9bb8c8;
         color: #ffffff;
       }
     }
@@ -198,7 +207,7 @@ nz-content {
   }
 
   .ant-tree.ant-tree-show-line li span.ant-tree-switcher {
-    background-color: #1890ff;
+    background-color: #0d141c;
     font-size: 16px;
     color: #ffffff;
   }
@@ -208,8 +217,7 @@ nz-content {
     color: #ffffff;
 
     &:hover, &.ant-tree-node-selected {
-      background-color: #ffffff;
-      color: #1890ff;
+      background-color: rgba(255, 255, 255, .2);
     }
   }
 

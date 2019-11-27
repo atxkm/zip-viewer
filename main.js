@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 const fs = require('fs');
 const Path = require('path');
 const crypto = require('crypto');
@@ -21,6 +21,7 @@ function createWindow() {
       nodeIntegration: true,
     },
   });
+  Menu.setApplicationMenu(null);
 
   // 加载index.html文件
   // win.loadFile('dist/zip-viewer/index.html');
