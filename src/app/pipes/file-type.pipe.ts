@@ -17,7 +17,7 @@ export class FileTypePipe implements PipeTransform {
       case 'mp3':
         return '音频';
     }
-    return '未知文件';
+    return '*';
   }
 
 }

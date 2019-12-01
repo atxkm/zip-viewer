@@ -36,9 +36,11 @@ export class FileComponent implements OnInit {
     const files = this.electron.ipcRenderer.sendSync('message', { type: 'getFiles', data: { path } });
     if (files) {
       this.analyseFiles(files);
-      const nodes = [{ title: '按路径展示', key: '2', children: files }];
+      const nodes = [{ title: '按路径展示', key: '2', expanded: true, children: files }];
       this.nodes = nodes;
-      setTimeout(() => this.files = this.tree.getTreeNodes());
+      setTimeout(() => {
+        this.files = this.tree.getTreeNodes()[0].children;
+      });
     }
   }
 

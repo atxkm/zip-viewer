@@ -28,12 +28,10 @@
     <nz-header>
       <div class="view">
         <button nz-button [class.active]="view == 'list'" (click)="view = 'list'">
-          <!--<i nz-icon nzType="profile" [nzTheme]="view == 'list' ? 'fill' : 'outline'"></i>-->
-          表格视图
+          <!--<i nz-icon nzType="profile" [nzTheme]="view == 'list' ? 'fill' : 'outline'"></i>-->表格视图
         </button>
         <button nz-button [class.active]="view == 'block'" (click)="view = 'block'">
-          <!--<i nz-icon nzType="appstore" [nzTheme]="view == 'block' ? 'fill' : 'outline'"></i>-->
-          文件夹视图
+          <!--<i nz-icon nzType="appstore" [nzTheme]="view == 'block' ? 'fill' : 'outline'"></i>-->文件夹视图
         </button>
       </div>
       <div class="oper">
@@ -74,27 +72,35 @@
 
       <div class="detail" *ngIf="file">
         <div class="bar">{{ file.title | fileType }}</div>
-        <div class="icon">
-          <img *ngIf="(file.title | fileType) == '图片'; else iconTmpl" [src]="file.origin.path | loadImg">
-          <ng-template #iconTmpl>
-            <i nz-icon nzTheme="fill" [nzType]="file.isLeaf ? (file.title | fileIcon): 'folder'"></i>
-          </ng-template>
-        </div>
-        <div>
-          <span class="name">{{ file.title }}</span>
-        </div>
-        <div>
-          <span>{{ file.origin.title | fileType }} - {{ file.origin.size | size }}</span>
-        </div>
-        <div class="title">信息</div>
-        <div class="info">
-          <div>
-            <span>创建时间</span>
-            <span>{{ file.origin.birthtime | time }}</span>
+        <div class="box">
+          <div class="icon">
+            <img *ngIf="(file.title | fileType) == '图片'; else iconTmpl" [src]="file.origin.path | loadImg">
+            <ng-template #iconTmpl>
+              <i nz-icon nzTheme="fill" [nzType]="file.isLeaf ? (file.title | fileIcon): 'folder'"></i>
+            </ng-template>
           </div>
-          <div>
-            <span>修改时间</span>
-            <span>{{ file.origin.mtime | time }}</span>
+          <div class="row">
+            <span>名称</span>
+            <span>{{ file.title }}</span>
+          </div>
+          <div class="row">
+            <span>类型</span>
+            <span>{{ file.origin.title | fileType }}</span>
+          </div>
+          <div class="row">
+            <span>大小</span>
+            <span>{{ file.origin.size | size }}</span>
+          </div>
+          <div class="title">信息</div>
+          <div class="info">
+            <div class="row">
+              <span>创建时间</span>
+              <span>{{ file.origin.birthtime | time }}</span>
+            </div>
+            <div class="row">
+              <span>修改时间</span>
+              <span>{{ file.origin.mtime | time }}</span>
+            </div>
           </div>
         </div>
       </div>
