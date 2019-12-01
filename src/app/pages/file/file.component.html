@@ -26,16 +26,18 @@
   </nz-sider>
   <nz-layout>
     <nz-header>
-      <div class="left">
-        <button nz-button [class.active]="view == 'block'" (click)="view = 'block'">
-          <i nz-icon nzType="appstore" [nzTheme]="view == 'block' ? 'fill' : 'outline'"></i>
-        </button>
+      <div class="view">
         <button nz-button [class.active]="view == 'list'" (click)="view = 'list'">
-          <i nz-icon nzType="profile" [nzTheme]="view == 'list' ? 'fill' : 'outline'"></i>
+          <!--<i nz-icon nzType="profile" [nzTheme]="view == 'list' ? 'fill' : 'outline'"></i>-->
+          表格视图
+        </button>
+        <button nz-button [class.active]="view == 'block'" (click)="view = 'block'">
+          <!--<i nz-icon nzType="appstore" [nzTheme]="view == 'block' ? 'fill' : 'outline'"></i>-->
+          文件夹视图
         </button>
       </div>
-      <div class="right">
-        <button nz-button (click)="exportJson()">导出报表</button>
+      <div class="oper">
+        <a href="javascript:;" (click)="exportJson()">导出</a>
       </div>
     </nz-header>
     <nz-content>
@@ -53,15 +55,17 @@
         <div class="list" *ngIf="view == 'list'">
           <table border="0">
             <tr>
-              <th>文件名</th>
-              <th>大小</th>
+              <th>#</th>
               <th>类型</th>
+              <th>名称</th>
+              <th>路径</th>
               <th>创建时间</th>
             </tr>
-            <tr *ngFor="let item of files" [class.active]="item == file" (click)="onSelect(item)">
-              <td>{{ item.title }}</td>
-              <td>{{ item.origin.size | size }}</td>
+            <tr *ngFor="let item of files; let i = index;" [class.active]="item == file" (click)="onSelect(item)">
+              <td>{{ i + 1 }}</td>
               <td>{{ item.origin.title | fileType }}</td>
+              <td>{{ item.title }}</td>
+              <td>{{ item.origin.path }}</td>
               <td>{{ item.origin.birthtime | time }}</td>
             </tr>
           </table>
@@ -69,6 +73,7 @@
       </div>
 
       <div class="detail" *ngIf="file">
+        <div class="bar">{{ file.title | fileType }}</div>
         <div class="icon">
           <img *ngIf="(file.title | fileType) == '图片'; else iconTmpl" [src]="file.origin.path | loadImg">
           <ng-template #iconTmpl>

@@ -1,39 +1,65 @@
-nz-header.ant-layout-header {
-  display: flex;
-  padding: 0;
-  background-color: #0d141c;
-  color: #ffffff;
+$blue: #6fc7f5;
+$blue-heavy: #202b3b;
+$blue-light: #d9effa;
 
-  .left {
-    button.ant-btn-icon-only {
-      width: 63px;
-      height: 63px;
+$grey: #c2c2c2;
+$grey-light: #eaeaea;
+$grey-heavy: #77787c;
+
+$black: #2d2f30;
+$black-light: #4b4c4d;
+
+$white: #ffffff;
+$white-heavy: #f6f6f6;
+
+nz-header.ant-layout-header {
+  height: auto;
+  padding: 0;
+
+  .view {
+    display: flex;
+    height: 40px;
+    background-color: $grey-light;
+    line-height: 38px;
+    font-size: 20px;
+
+    button.ant-btn {
+      width: 120px;
+      height: 38px;
+      border: none;
       border-radius: 0;
       box-shadow: none;
+      background-color: $grey-light;
+      color: $grey-heavy;
 
       &.active, &:hover {
-        border-color: #9bb8c8;
-        color: #9bb8c8;
-      }
-    }
+        border-left: 1px solid $grey;
+        border-right: 1px solid $grey;
+        background-color: $white;
+        color: $black;
 
-    .ant-btn-icon-only {
-      font-size: 26px;
+        ::ng-deep span {
+          border-bottom: 6px solid $blue;
+        }
+      }
     }
   }
 
-  .right {
+  .oper {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    flex: 1 0 auto;
     padding-right: 20px;
+    border-bottom: 1px solid $grey;
+    background-color: $white;
+    line-height: 48px;
 
-    button.ant-btn {
+    a {
+      font-size: 14px;
+      color: $black;
 
-      &.active, &:hover {
-        border-color: #9bb8c8;
-        color: #9bb8c8;
+      &:hover {
+        text-decoration: underline;
       }
     }
   }
@@ -41,9 +67,8 @@ nz-header.ant-layout-header {
 }
 
 nz-sider {
-  //border-right: 1px solid #1890ff;
-  max-height: 100vh;
-  background-color: #0d141c;
+  height: 100vh;
+  background-color: $blue-heavy;
   color: #ffffff;
 
   .search {
@@ -64,6 +89,7 @@ nz-content {
 
   .file-list {
     flex: 1 1 auto;
+    overflow: auto;
   }
 
   .block {
@@ -109,12 +135,12 @@ nz-content {
 
       &.active {
         .icon {
-          background-color: rgba(255, 255, 255, .2);
-          color: #9bb8c8;
+          background-color: $black-light;
+          color: $blue;
         }
 
         p span {
-          background-color: #9bb8c8;
+          background-color: $black;
           color: #ffffff;
         }
       }
@@ -122,33 +148,43 @@ nz-content {
   }
 
   .list {
-    overflow: auto;
-    max-height: 100%;
     color: #ffffff;
 
     table {
       width: 100%;
-      font-size: 16px;
+      font-size: 14px;
 
       tr {
         height: 30px;
 
         th, td {
           padding-left: 5px;
+          border: 1px solid #dcdada;
         }
       }
 
-      tr:nth-child(n) {
-        background-color: #2b2b2c;
+      th {
+        min-width: 50px;
+        max-width: 300px;
+        background-color: $grey-light;
+        font-size: 14px;
+        color: $black-light;
       }
 
-      tr:nth-child(2n) {
-        background-color: #353536;
+      td {
+        height: 110px;
+        background-color: $white-heavy;
+        color: $black-light;
+        word-break: break-all;
       }
 
-      tr.active {
-        background-color: #9bb8c8;
-        color: #ffffff;
+      tr.active td {
+        background-color: $blue;
+        color: $black;
+      }
+
+      tr:hover td {
+        background-color: $blue-light;
       }
     }
 
@@ -156,10 +192,18 @@ nz-content {
 
   .detail {
     flex: 0 0 300px;
-    padding: 30px;
     background-color: #fafafa;
     font-size: 16px;
     color: #808080;
+
+    .bar {
+      padding-left: 22px;
+      background-color: $grey;
+      line-height: 50px;
+      font-size: 22px;
+      font-weight: bold;
+      color: $black;
+    }
 
     .icon {
       display: flex;
@@ -203,17 +247,17 @@ nz-content {
 
 ::ng-deep {
   .ant-layout {
-    min-height: 100vh;
+    height: 100vh;
   }
 
   .ant-tree.ant-tree-show-line li span.ant-tree-switcher {
-    background-color: #0d141c;
-    font-size: 16px;
+    background-color: $blue-heavy;
+    font-size: 14px;
     color: #ffffff;
   }
 
   .ant-tree li .ant-tree-node-content-wrapper {
-    font-size: 16px;
+    font-size: 14px;
     color: #ffffff;
 
     &:hover, &.ant-tree-node-selected {

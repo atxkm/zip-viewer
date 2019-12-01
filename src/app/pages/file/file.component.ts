@@ -12,7 +12,7 @@ export class FileComponent implements OnInit {
 
   @ViewChild('tree', { static: false }) tree;
 
-  view = 'block';
+  view = 'list';
   searchValue;
   nodes;
   nodes2;

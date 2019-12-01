@@ -208,6 +208,7 @@ function getFiles(path) {
       size: stats.size,
       mtime: stats.mtime,
       birthtime: stats.birthtime,
+      path: fPath,
     };
     if (stats.isDirectory()) {
       temp.children = getFiles(fPath);
@@ -215,7 +216,6 @@ function getFiles(path) {
         temp.isLeaf = true;
       }
     } else {
-      temp.path = fPath;
       temp.isLeaf = true;
     }
     files.push(temp);
