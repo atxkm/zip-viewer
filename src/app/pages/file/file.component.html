@@ -43,7 +43,10 @@
         <div class="block" *ngIf="view == 'block'">
           <div class="item" *ngFor="let item of files" [class.active]="item == file" (click)="onSelect(item)">
             <div class="icon">
-              <i nz-icon nzTheme="fill" [nzType]="item.isLeaf ? (item.title | fileIcon) : 'folder'"></i>
+              <img *ngIf="(item.title | fileType) == '图片'; else iconTmplB" [src]="item.origin.path | loadImg">
+              <ng-template #iconTmplB>
+                <i nz-icon nzTheme="fill" [nzType]="item.isLeaf ? (item.title | fileIcon) : 'folder'"></i>
+              </ng-template>
             </div>
             <p>
               <span>{{ item.title }}</span>
