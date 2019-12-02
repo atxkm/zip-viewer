@@ -55,6 +55,7 @@
             <tr>
               <th>#</th>
               <th>类型</th>
+              <th>图像</th>
               <th>名称</th>
               <th>路径</th>
               <th>创建时间</th>
@@ -62,6 +63,12 @@
             <tr *ngFor="let item of files; let i = index;" [class.active]="item == file" (click)="onSelect(item)">
               <td>{{ i + 1 }}</td>
               <td>{{ item.origin.title | fileType }}</td>
+              <td>
+                <img *ngIf="(item.title | fileType) == '图片'; else iconTmplL" [src]="item.origin.path | loadImg">
+                <ng-template #iconTmplL>
+                  <i nz-icon nzTheme="fill" [nzType]="item.isLeaf ? (item.title | fileIcon): 'folder'"></i>
+                </ng-template>
+              </td>
               <td>{{ item.title }}</td>
               <td>{{ item.origin.path }}</td>
               <td>{{ item.origin.birthtime | time }}</td>

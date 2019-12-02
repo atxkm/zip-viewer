@@ -12,8 +12,12 @@ export class LoadImgPipe implements PipeTransform {
   }
 
   transform(value: any, ...args: any[]): any {
-    const data = this.electron.ipcRenderer.sendSync('message', { type: 'getImg', data: { path: value } });
-    return 'data:image/jpeg;base64,' + data;
+    const sfx = value && value.split('.')[1];
+    if (sfx === 'jpg' || sfx === 'png' || sfx === 'gif') {
+      const data = this.electron.ipcRenderer.sendSync('message', { type: 'getImg', data: { path: value } });
+      return 'data:image/jpeg;base64,' + data;
+    }
+    return '*';
   }
 
 }

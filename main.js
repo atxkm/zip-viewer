@@ -78,7 +78,7 @@ ipcMain.on('message', (e, message) => {
       exportExcel(message.data);
       break;
     case 'getImg':
-      e.returnValue = getImg(message.data);
+      getImg(e, message.data);
       break;
     case 'exportJson':
       exportJson(message.data);
@@ -237,13 +237,17 @@ function exportExcel(data) {
   }
 }
 
-function getImg(data) {
+function getImg(e, data) {
   const fPath = data.path;
-  let file = '';
   if (fPath) {
-    file = fs.readFileSync(fPath);
+    fs.readFile(fPath, (err, file) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      e.returnValue = Buffer.from(file).toString('base64');
+    });
   }
-  return Buffer.from(file).toString('base64');
 }
 
 function exportJson(data) {

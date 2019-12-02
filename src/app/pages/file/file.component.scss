@@ -176,6 +176,14 @@ nz-content {
         background-color: $white-heavy;
         color: $black-light;
         word-break: break-all;
+
+        img {
+          max-width: 80px;
+        }
+
+        i {
+          font-size: 50px;
+        }
       }
 
       tr.active td {
